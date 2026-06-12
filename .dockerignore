@@ -6,3 +6,7 @@ __pycache__
 .pytest_cache
 uploads/
 large_transactions.csv
+venv/
+.venv/
+env/
+.env/
