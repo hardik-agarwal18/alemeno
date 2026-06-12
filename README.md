@@ -1,6 +1,6 @@
 # AI-Powered Transaction Processing Pipeline
 
-This project is a production-grade backend service designed to process transactions from CSV files, clean the data, detect anomalies using a rules engine, and classify uncategorized transactions using a large language model (Google Gemini).
+This project is a production-grade backend service designed to process transactions from CSV files, clean the data, detect anomalies using a rules engine, and classify uncategorized transactions using a large language model (OpenAI).
 
 ## Live Demo
 
@@ -13,13 +13,13 @@ This project is a production-grade backend service designed to process transacti
 - **Database**: PostgreSQL (SQLAlchemy 2.0, Alembic)
 - **Queue/Workers**: Celery with Redis broker
 - **Data Processing**: Pandas
-- **AI**: Google GenAI (Gemini 1.5 Flash)
+- **AI**: OpenAI (GPT-3.5 Turbo)
 - **Containerization**: Docker & Docker Compose
 
 ## Requirements
 
 - Docker & Docker Compose installed.
-- Gemini API Key (or fallback to mock behavior).
+- OpenAI API Key (or fallback to mock behavior).
 
 ## Setup & Running
 
@@ -27,7 +27,7 @@ This project is a production-grade backend service designed to process transacti
    ```bash
    cp .env.example .env
    ```
-2. Update the `.env` file with your `GEMINI_API_KEY`.
+2. Update the `.env` file with your `OPENAI_API_KEY` and set `LLM_PROVIDER=openai`.
 3. Build and run using Docker Compose:
    ```bash
    docker-compose up --build
