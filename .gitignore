@@ -141,7 +141,6 @@ Thumbs.db
 
 # Project specific
 uploads/
-*.csv
 !sample.csv
 !transactions.csv
 !Backend_DevOps_Assignment.pdf

@@ -39,6 +39,7 @@ Alembic migrations are automatically applied on startup.
 ### Deployment (AWS EC2)
 
 The application is deployed to an AWS EC2 instance. To deploy changes:
+
 1. SSH into the instance and pull the latest code.
 2. Update the `.env` file (ensure `POSTGRES_PORT=5432` if running inside the Docker network).
 3. Rebuild and restart the containers:
@@ -62,3 +63,30 @@ pytest
 - `GET /jobs/{job_id}/status` : Get the status of a job
 - `GET /jobs/{job_id}/results` : Get transactions, anomalies, and AI summary
 - `GET /jobs` : List recent jobs
+
+## Example Usage (cURL)
+
+**1. Upload a CSV File**
+
+_Note: You can test the API using the included `test_sample.csv`, or `large_transactions.csv` files._
+
+```bash
+curl -X POST "http://43.204.142.128:8000/jobs/upload" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@test_sample.csv"
+```
+
+_(This returns a `job_id` like `d9936632-0172-486f-a721-4b6da4b51ebc`)_
+
+**2. Check Job Status**
+
+```bash
+curl -X GET "http://43.204.142.128:8000/jobs/d9936632-0172-486f-a721-4b6da4b51ebc/status"
+```
+
+**3. Get Job Results (Anomalies & AI Summary)**
+
+```bash
+curl -X GET "http://43.204.142.128:8000/jobs/d9936632-0172-486f-a721-4b6da4b51ebc/results"
+```
