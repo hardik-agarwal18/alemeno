@@ -2,6 +2,11 @@
 
 This project is a production-grade backend service designed to process transactions from CSV files, clean the data, detect anomalies using a rules engine, and classify uncategorized transactions using a large language model (Google Gemini).
 
+## Live Demo
+
+- **API Base URL**: [http://43.204.142.128:8000](http://43.204.142.128:8000)
+- **Swagger Documentation**: [http://43.204.142.128:8000/docs](http://43.204.142.128:8000/docs)
+
 ## Architecture
 
 - **Backend**: FastAPI (Python 3.12)
@@ -30,6 +35,16 @@ This project is a production-grade backend service designed to process transacti
 
 This will bring up the `api` (port 8000), `worker`, `postgres` (port 5432), and `redis` (port 6379).
 Alembic migrations are automatically applied on startup.
+
+### Deployment (AWS EC2)
+
+The application is deployed to an AWS EC2 instance. To deploy changes:
+1. SSH into the instance and pull the latest code.
+2. Update the `.env` file (ensure `POSTGRES_PORT=5432` if running inside the Docker network).
+3. Rebuild and restart the containers:
+   ```bash
+   sudo docker-compose up -d --build
+   ```
 
 ## Testing
 
