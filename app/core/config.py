@@ -25,7 +25,8 @@ class Settings(BaseSettings):
 
     # LLM
     GEMINI_API_KEY: str = ""
-    LLM_PROVIDER: str = "gemini"
+    OPENAI_API_KEY: str = ""
+    LLM_PROVIDER: str = "openai"
     LLM_BATCH_SIZE: int = 50
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra="ignore")

@@ -2,8 +2,8 @@ import json
 import time
 import logging
 from typing import List, Dict, Any
-from google import genai
-from google.genai import types
+import openai
+from openai import OpenAI
 from app.core.config import settings
 from app.services.llm.base import BaseLLMProvider
 
@@ -20,13 +20,13 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         return super(NumpyEncoder, self).default(obj)
 
-class GeminiProvider(BaseLLMProvider):
+class OpenAIProvider(BaseLLMProvider):
     def __init__(self):
-        self.api_key = settings.GEMINI_API_KEY
+        self.api_key = settings.OPENAI_API_KEY
         if not self.api_key:
-            logger.warning("GEMINI_API_KEY is not set. LLM calls will fail.")
-        self.client = genai.Client(api_key=self.api_key)
-        self.model = 'gemini-pro'
+            logger.warning("OPENAI_API_KEY is not set. LLM calls will fail.")
+        self.client = OpenAI(api_key=self.api_key)
+        self.model = 'gpt-3.5-turbo' # Can be updated to gpt-4o or gpt-4-turbo
         
         self.categories = [
             "Food", "Shopping", "Travel", "Transport", 
@@ -63,11 +63,15 @@ class GeminiProvider(BaseLLMProvider):
         """
         
         def _make_call():
-            response = self.client.models.generate_content(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                contents=prompt,
+                messages=[
+                    {"role": "system", "content": "You are a precise financial categorization AI. You only return valid JSON arrays."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.0
             )
-            text = response.text.strip()
+            text = response.choices[0].message.content.strip()
             # Handle potential markdown code blocks
             if text.startswith("```json"):
                 text = text[7:]
@@ -75,26 +79,27 @@ class GeminiProvider(BaseLLMProvider):
                 text = text[3:]
             if text.endswith("```"):
                 text = text[:-3]
-            
+                
             categories = json.loads(text.strip())
             
-            # Validate output
-            validated = []
-            for cat in categories:
-                if cat in self.categories:
-                    validated.append(cat)
-                else:
-                    validated.append("Other")
-                    
-            if len(validated) != len(transactions):
-                logger.error(f"LLM returned {len(validated)} categories for {len(transactions)} transactions")
-                # Pad with 'Other' if short, truncate if long
-                while len(validated) < len(transactions):
-                    validated.append("Other")
-                validated = validated[:len(transactions)]
+            # Fallback for unexpected formats
+            if not isinstance(categories, list):
+                return ["Other"] * len(transactions)
                 
-            return validated
-            
+            # Ensure length matches
+            if len(categories) != len(transactions):
+                # Simple fallback
+                return ["Other"] * len(transactions)
+                
+            # Ensure valid categories
+            valid_cats = []
+            for c in categories:
+                if c in self.categories:
+                    valid_cats.append(c)
+                else:
+                    valid_cats.append("Other")
+            return valid_cats
+
         try:
             return self._call_with_retry(_make_call)
         except Exception as e:
@@ -103,6 +108,7 @@ class GeminiProvider(BaseLLMProvider):
 
     def generate_summary(self, data: Dict[str, Any]) -> Dict[str, str]:
         prompt = f"""
+        You are a financial analyst AI.
         Analyze the following transaction data and generate a summary.
         
         Data:
@@ -110,19 +116,23 @@ class GeminiProvider(BaseLLMProvider):
         
         Provide your response in JSON format exactly like this:
         {{
-            "risk_level": "LOW", # or MEDIUM, HIGH
-            "narrative": "A short 2-3 sentence paragraph describing the spending patterns and highlighting any risks."
+            "risk_level": "LOW" | "MEDIUM" | "HIGH",
+            "narrative": "A concise 2-3 sentence paragraph explaining the user's spending habits, highlighting the biggest expense and any notable anomalies."
         }}
         
-        Return ONLY valid JSON.
+        Do not include any markdown formatting, markdown code blocks, or extra text. Just the JSON object.
         """
         
         def _make_call():
-            response = self.client.models.generate_content(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                contents=prompt,
+                messages=[
+                    {"role": "system", "content": "You are a financial analyst AI. You only output valid JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7
             )
-            text = response.text.strip()
+            text = response.choices[0].message.content.strip()
             # Handle potential markdown code blocks
             if text.startswith("```json"):
                 text = text[7:]
