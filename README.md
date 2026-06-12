@@ -58,7 +58,7 @@ pytest
 ## API Endpoints
 
 - `GET /health` : Verify system health
-- `POST /api/v1/jobs/upload` : Upload a CSV for asynchronous processing
-- `GET /api/v1/jobs/{job_id}/status` : Get the status of a job
-- `GET /api/v1/jobs/{job_id}/results` : Get transactions, anomalies, and AI summary
-- `GET /api/v1/jobs` : List recent jobs
+- `POST /jobs/upload` : Upload a CSV for asynchronous processing
+- `GET /jobs/{job_id}/status` : Get the status of a job
+- `GET /jobs/{job_id}/results` : Get transactions, anomalies, and AI summary
+- `GET /jobs` : List recent jobs
