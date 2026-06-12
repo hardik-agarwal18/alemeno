@@ -4,10 +4,13 @@ This project is a production-grade backend service designed to process transacti
 
 ## Live Demo
 
-- **API Base URL**: [http://43.204.142.128:8000](http://43.204.142.128:8000)
-- **Swagger Documentation**: [http://43.204.142.128:8000/docs](http://43.204.142.128:8000/docs)
+- **API Base URL**: [http://3.7.55.124:8000](http://3.7.55.124:8000)
+- **Swagger Documentation**: [http://3.7.55.124:8000/docs](http://3.7.55.124:8000/docs)
 
 ## Architecture
+
+![System Architecture Diagram](https://drive.google.com/uc?export=view&id=12k3l_4ADqxTFS3O2X9n64p47rjVUKgnV)
+*(View original diagram: [https://drive.google.com/file/d/12k3l_4ADqxTFS3O2X9n64p47rjVUKgnV/view?usp=sharing](https://drive.google.com/file/d/12k3l_4ADqxTFS3O2X9n64p47rjVUKgnV/view?usp=sharing))*
 
 - **Backend**: FastAPI (Python 3.12)
 - **Database**: PostgreSQL (SQLAlchemy 2.0, Alembic)
@@ -71,7 +74,7 @@ pytest
 _Note: You can test the API using the included `test_sample.csv`, or `large_transactions.csv` files._
 
 ```bash
-curl -X POST "http://43.204.142.128:8000/jobs/upload" \
+curl -X POST "http://3.7.55.124:8000/jobs/upload" \
   -H "accept: application/json" \
   -H "Content-Type: multipart/form-data" \
   -F "file=@test_sample.csv"
@@ -82,11 +85,11 @@ _(This returns a `job_id` like `d9936632-0172-486f-a721-4b6da4b51ebc`)_
 **2. Check Job Status**
 
 ```bash
-curl -X GET "http://43.204.142.128:8000/jobs/d9936632-0172-486f-a721-4b6da4b51ebc/status"
+curl -X GET "http://3.7.55.124:8000/jobs/d9936632-0172-486f-a721-4b6da4b51ebc/status"
 ```
 
 **3. Get Job Results (Anomalies & AI Summary)**
 
 ```bash
-curl -X GET "http://43.204.142.128:8000/jobs/d9936632-0172-486f-a721-4b6da4b51ebc/results"
+curl -X GET "http://3.7.55.124:8000/jobs/d9936632-0172-486f-a721-4b6da4b51ebc/results"
 ```
