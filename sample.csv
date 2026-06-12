@@ -1,0 +1,11 @@
+txn_id,date,merchant,amount,currency,status,category,account_id
+T1,2025/05/01,Zomato,500,INR,Success,Food,A1
+T2,01-05-2025,Swiggy,1200,USD,success,,A1
+T3,05/01/2025,Amazon,2000,INR,SUCCESS,,A1
+T4,2025-05-02,IRCTC,1500,INR,Failed,,A1
+T5,2025-05-03,Netflix,800,INR,Success,Entertainment,A2
+T6,2025-05-04,Uber India,150,USD,Success,,A2
+T7,2025-05-05,Local Shop,10,INR,Success,,A2
+T8,2025-05-06,Local Shop,15,INR,Success,,A2
+T9,2025-05-07,Local Shop,12,INR,Success,,A2
+T10,2025-05-08,Local Shop,2000,INR,Success,,A2
